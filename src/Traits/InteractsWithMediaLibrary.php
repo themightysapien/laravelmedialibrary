@@ -29,18 +29,25 @@ trait InteractsWithMediaLibrary
 
     public function addMediaByAddingToLibrary($path)
     {
-        $library = Medialibrary::init();
 
-        $media = $library->addMedia($path)
-            // ->preservingOriginal()
-            ->toMediaCollection(Config::get('mlibrary.collection_name', 'library'));
 
-            dump($media);
+        $media = $this->addMediaToLibrary($path);
+        dump($media);
 
         // $media = $library->media()->latest()->first();
         // dump($media->getPath());
         // dump(Storage::disk(Config::get('media-library.disk_name'))->path($media->getPathRelativeToRoot()));
 
         return $this->addMediaFromLibrary($media);
+    }
+
+
+    public function addMediaToLibrary($path)
+    {
+        $library = Medialibrary::init();
+
+        return $library->addMedia($path)
+            // ->preservingOriginal()
+            ->toMediaCollection(Config::get('mlibrary.collection_name', 'library'));
     }
 }

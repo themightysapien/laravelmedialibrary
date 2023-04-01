@@ -6,6 +6,11 @@
 
 This packages adds a library functionality on top of [Spatie Media Library](https://spatie.be/docs/laravel-medialibrary/v9/introduction) package.
 
+### Features
+
+- Add media to library
+- Use media from library
+
 ## Installation
 
 You can install the package via composer:
