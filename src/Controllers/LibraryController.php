@@ -1,9 +1,9 @@
 <?php
 namespace Themightysapien\Medialibrary\Controllers;
 
-class LibraryTestController {
+class LibraryController {
 
-    public function upload(){
+    public function index(){
 
     }
 }

@@ -5,5 +5,7 @@
  */
 return [
     'table_name' => 'media_library',
-    'collection_name' => 'library'
+    'collection_name' => 'library',
+    'route_prefix' => '/api/medialibrary',
+    'route_middleware' => ['api'],
 ];

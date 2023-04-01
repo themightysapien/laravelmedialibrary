@@ -2,6 +2,7 @@
 
 namespace Themightysapien\Medialibrary;
 
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 class MedialibraryServiceProvider extends ServiceProvider
@@ -56,9 +57,26 @@ class MedialibraryServiceProvider extends ServiceProvider
         // Automatically apply the package configuration
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'mlibrary');
 
+        $this->registerRoutes();
+
         // Register the main class to use with the facade
         $this->app->singleton('medialibrary', function () {
             return new Medialibrary;
         });
+    }
+
+    protected function registerRoutes()
+    {
+        Route::group($this->routeConfiguration(), function () {
+            $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
+        });
+    }
+
+    protected function routeConfiguration()
+    {
+        return [
+            'prefix' => config('mlibrary.route_prefix'),
+            'middleware' => config('mlibrary.route_middleware'),
+        ];
     }
 }
