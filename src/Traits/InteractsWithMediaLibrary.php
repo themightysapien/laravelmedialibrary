@@ -27,12 +27,12 @@ trait InteractsWithMediaLibrary
     }
 
 
-    public function addMediaByAddingToLibrary($path)
+    public function addMediaThroughLibrary($path)
     {
 
 
         $media = $this->addMediaToLibrary($path);
-        // dump($media);
+        dump($media);
 
         // $media = $library->media()->latest()->first();
         // dump($media->getPath());
@@ -44,7 +44,7 @@ trait InteractsWithMediaLibrary
 
     public function addMediaToLibrary($path)
     {
-        $library = Medialibrary::init();
+        $library = Medialibrary::open();
 
         return $library->addMedia($path)
             // ->preservingOriginal()
