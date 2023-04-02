@@ -20,7 +20,7 @@ class LibraryController
             request: $request
         ));
 
-        dump(get_class($items));
+        // dump(get_class($items));
 
 
         return response()->json([

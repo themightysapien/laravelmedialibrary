@@ -21,7 +21,7 @@ class LibraryTest extends MediaLibraryTestCase
 
     private $files = [
         'test.txt' => 'Hello world',
-        'test.json' => '[{"hello":"world"}]'
+        'file.json' => '[{"hello":"world"}]'
 
     ];
 
@@ -29,7 +29,7 @@ class LibraryTest extends MediaLibraryTestCase
     {
         $tempModel = TempModel::firstOrCreate(['name' => 'Temp']);
 
-        foreach($files as $file => $content){
+        foreach ($files as $file => $content) {
             Storage::disk(Config::get('media-library.disk_name'))->put($file, $content);
 
 
@@ -53,14 +53,14 @@ class LibraryTest extends MediaLibraryTestCase
         $this->assertDatabaseHas('media', [
             'collection_name' => Config::get('mlibrary.collection_name'),
             'model_type' => Library::class,
-            'file_name' => 'test.json'
+            'file_name' => 'test.txt'
         ]);
 
         /* Check model file exists */
         $this->assertDatabaseHas('media', [
             'collection_name' => 'default',
             'model_type' => TempModel::class,
-            'file_name' => 'test.json'
+            'file_name' => 'file.json'
         ]);
 
         // $library = Medialibrary::init();
@@ -73,7 +73,8 @@ class LibraryTest extends MediaLibraryTestCase
     }
 
 
-    public function test_route_works(){
+    public function test_route_works()
+    {
         $response = $this->get(route('themightysapien.medialibrary.index'));
         // dump($response);
 
@@ -81,8 +82,35 @@ class LibraryTest extends MediaLibraryTestCase
     }
 
 
-    public function test_route_returns_media_items(){
+    public function test_route_returns_media_items()
+    {
+        $this->setUpUploads($this->files);
         $response = $this->json('get', route('themightysapien.medialibrary.index'));
+        // dump($response['items']);
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(
+                [
+                    'items' => [
+                        '*' => [
+                            'id',
+                            'name',
+
+                        ]
+                    ]
+                ]
+            );
+    }
+
+    public function test_route_returns_filtered_media_items_by_name()
+    {
+        $this->setUpUploads($this->files);
+
+        $response = $this->json('get', route('themightysapien.medialibrary.index'), [
+            'name' => 'test'
+        ]);
+
+        // dump($response);
 
         $response
             ->assertStatus(Response::HTTP_OK)
@@ -98,6 +126,34 @@ class LibraryTest extends MediaLibraryTestCase
                 ]
             );
 
+        $this->assertTrue(count($response['items']) == 1);
+    }
 
+
+    public function test_route_returns_filtered_media_items_by_type()
+    {
+        $this->setUpUploads($this->files);
+
+        $response = $this->json('get', route('themightysapien.medialibrary.index'), [
+            'type' => 'json'
+        ]);
+
+        // dump($response);
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(
+                [
+                    'items' => [
+                        '*' => [
+                            'id',
+                            'name',
+
+                        ]
+                    ]
+                ]
+            );
+
+        $this->assertTrue(count($response['items']) == 1);
     }
 }

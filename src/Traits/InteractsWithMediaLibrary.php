@@ -32,7 +32,7 @@ trait InteractsWithMediaLibrary
 
 
         $media = $this->addMediaToLibrary($path);
-        dump($media);
+        // dump($media);
 
         // $media = $library->media()->latest()->first();
         // dump($media->getPath());
