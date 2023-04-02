@@ -50,5 +50,10 @@ class LibraryTest extends MediaLibraryTestCase
     }
 
 
+    public function test_config_has_filters_array()
+    {
+        $this->assertNotNull(Config::get('mlibrary.filters'), 'Forgot to add filters to config');
 
+        $this->assertTrue(is_array(Config::get('mlibrary.filters')) && count(Config::get('mlibrary.filters')) > 0, 'Filter has no items.');
+    }
 }
