@@ -1,5 +1,5 @@
 <?php
-namespace Themightysapien\Medialibrary\Resources;
+namespace Themightysapien\MediaLibrary\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

@@ -1,13 +1,13 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Facades;
+namespace Themightysapien\MediaLibrary\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \Themightysapien\Medialibrary\Skeleton\SkeletonClass
+ * @see \Themightysapien\MediaLibrary\Skeleton\SkeletonClass
  */
-class Medialibrary extends Facade
+class MediaLibrary extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -16,6 +16,6 @@ class Medialibrary extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'medialibrary';
+        return 'themightysapienmedialibrary';
     }
 }

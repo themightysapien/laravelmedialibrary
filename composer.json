@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Themightysapien\\Medialibrary\\": "src"
+            "Themightysapien\\MediaLibrary\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Themightysapien\\Medialibrary\\Tests\\": "tests"
+            "Themightysapien\\MediaLibrary\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -44,10 +44,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Themightysapien\\Medialibrary\\MedialibraryServiceProvider"
+                "Themightysapien\\MediaLibrary\\MediaLibraryServiceProvider"
             ],
             "aliases": {
-                "Medialibrary": "Themightysapien\\Medialibrary\\MedialibraryFacade"
+                "MediaLibrary": "Themightysapien\\MediaLibrary\\MediaLibraryFacade"
             }
         }
     }

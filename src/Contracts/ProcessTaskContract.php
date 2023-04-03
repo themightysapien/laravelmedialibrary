@@ -1,9 +1,9 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Contracts;
+namespace Themightysapien\MediaLibrary\Contracts;
 
 use Closure;
-use Themightysapien\Medialibrary\Contracts\PayloadContract;
+use Themightysapien\MediaLibrary\Contracts\PayloadContract;
 
 interface  ProcessTaskContract
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Process;
+namespace Themightysapien\MediaLibrary\Process;
 
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Config;
-use Themightysapien\Medialibrary\Contracts\ProcessContract;
-use Themightysapien\Medialibrary\Contracts\PayloadContract;
-use Themightysapien\Medialibrary\Filters\OnlyLibraryMediaFilter;
-use Themightysapien\Medialibrary\Payloads\LibraryMediaPayload;
+use Themightysapien\MediaLibrary\Contracts\ProcessContract;
+use Themightysapien\MediaLibrary\Contracts\PayloadContract;
+use Themightysapien\MediaLibrary\Filters\OnlyLibraryMediaFilter;
+use Themightysapien\MediaLibrary\Payloads\LibraryMediaPayload;
 
 class ListLibraryMediaProcess implements ProcessContract
 {
@@ -17,9 +17,10 @@ class ListLibraryMediaProcess implements ProcessContract
             ->send($payload)
             ->through($this->tasks())
             // ->thenReturn();
-            ->then(function (LibraryMediaPayload $payload) {
+            ->then(function (PayloadContract $payload) {
+                // dump($payload->queryBuilder()->toSql());
                 return $payload
-                    ->builder
+                    ->queryBuilder()
                     ->paginate($payload->request()->get('per_page', Config::get('mlibrary.items_per_page', 50)));
             });
             /* ->thenReturn() */;

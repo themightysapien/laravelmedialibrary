@@ -1,11 +1,11 @@
 <?php
 
-namespace Themightysapien\Medialibrary;
+namespace Themightysapien\MediaLibrary;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
-class MedialibraryServiceProvider extends ServiceProvider
+class MediaLibraryServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.
@@ -27,7 +27,7 @@ class MedialibraryServiceProvider extends ServiceProvider
 
             $this->publishes([
                 __DIR__ . '/../database/migrations/' => database_path('migrations/'),
-            ], 'themightysapien-library-migrations');
+            ], 'migrations');
 
             // Publishing the views.
             /*$this->publishes([
@@ -60,8 +60,8 @@ class MedialibraryServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         // Register the main class to use with the facade
-        $this->app->singleton('medialibrary', function () {
-            return new Medialibrary;
+        $this->app->singleton('themightysapienmedialibrary', function () {
+            return new MediaLibrary;
         });
     }
 

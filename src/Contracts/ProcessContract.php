@@ -1,6 +1,6 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Contracts;
+namespace Themightysapien\MediaLibrary\Contracts;
 
 use Closure;
 

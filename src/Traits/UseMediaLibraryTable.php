@@ -1,6 +1,6 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Traits;
+namespace Themightysapien\MediaLibrary\Traits;
 
 use Illuminate\Support\Facades\Config;
 

@@ -1,13 +1,12 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Models;
+namespace Themightysapien\MediaLibrary\Models;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
-use Themightysapien\Medialibrary\Traits\UseMediaLibraryTable;
 
 class Library extends Model implements HasMedia
 {

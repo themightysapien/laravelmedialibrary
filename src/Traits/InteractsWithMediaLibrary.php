@@ -1,14 +1,14 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Traits;
+namespace Themightysapien\MediaLibrary\Traits;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Themightysapien\Medialibrary\Models\Library;
+use Themightysapien\MediaLibrary\Models\Library;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Themightysapien\Medialibrary\Facades\Medialibrary;
+use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
 trait InteractsWithMediaLibrary
 {
@@ -40,7 +40,7 @@ trait InteractsWithMediaLibrary
     {
 
 
-        $media = Medialibrary::addMedia($file);
+        $media = MediaLibrary::addMedia($file);
         // dump($media);
 
         // $media = $library->media()->latest()->first();

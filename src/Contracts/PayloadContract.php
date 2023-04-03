@@ -1,6 +1,6 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Contracts;
+namespace Themightysapien\MediaLibrary\Contracts;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;

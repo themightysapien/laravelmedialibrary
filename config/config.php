@@ -1,17 +1,19 @@
 <?php
-
-/*
- * You can place your custom package configuration in here.
- */
 return [
+    /* library table name */
     'table_name' => 'media_library',
+    /* library media collection name */
     'collection_name' => 'library',
-    'route_prefix' => '/api/medialibrary',
+    /* api route prefix */
+    'route_prefix' => '/api/v1/',
+    /* api route middleware */
     'route_middleware' => ['api'],
+    /* listing filters */
     'filters' => [
-        \Themightysapien\Medialibrary\Filters\FileNameFilter::class,
-        \Themightysapien\Medialibrary\Filters\FileTypeFilter::class,
-        \Themightysapien\Medialibrary\Filters\DefaultSortFilter::class,
+        \Themightysapien\MediaLibrary\Filters\FileNameFilter::class,
+        \Themightysapien\MediaLibrary\Filters\FileTypeFilter::class,
+        \Themightysapien\MediaLibrary\Filters\DefaultSortFilter::class,
     ],
+    /* api list pagination  */
     'items_per_page' => 50
 ];

@@ -1,13 +1,13 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Filters;
+namespace Themightysapien\MediaLibrary\Filters;
 
 use Closure;
 use Illuminate\Support\Facades\Config;
-use Themightysapien\Medialibrary\Models\Library;
-use Themightysapien\Medialibrary\Contracts\PayloadContract;
-use Themightysapien\Medialibrary\Contracts\ProcessTaskContract;
-use Themightysapien\Medialibrary\Payloads\LibraryMediaPayload;
+use Themightysapien\MediaLibrary\Models\Library;
+use Themightysapien\MediaLibrary\Contracts\PayloadContract;
+use Themightysapien\MediaLibrary\Contracts\ProcessTaskContract;
+use Themightysapien\MediaLibrary\Payloads\LibraryMediaPayload;
 
 class DefaultSortFilter implements ProcessTaskContract
 {

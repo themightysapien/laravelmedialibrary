@@ -1,10 +1,10 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Payloads;
+namespace Themightysapien\MediaLibrary\Payloads;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use Themightysapien\Medialibrary\Contracts\PayloadContract;
+use Themightysapien\MediaLibrary\Contracts\PayloadContract;
 
 class  LibraryMediaPayload implements PayloadContract
 {

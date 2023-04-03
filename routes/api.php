@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Themightysapien\Medialibrary\Controllers\LibraryController;
+use Themightysapien\MediaLibrary\Controllers\LibraryController;
 
 
-Route::get('/', [LibraryController::class, 'index'])
+Route::get('/tsmedialibrary', [LibraryController::class, 'index'])
     ->name('themightysapien.medialibrary.index');

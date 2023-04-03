@@ -1,12 +1,12 @@
 <?php
 
-namespace Themightysapien\Medialibrary;
+namespace Themightysapien\MediaLibrary;
 
 use Illuminate\Support\Facades\Config;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Themightysapien\Medialibrary\Models\Library;
+use Themightysapien\MediaLibrary\Models\Library;
 
-class Medialibrary
+class MediaLibrary
 {
     /**
      * @return Library
@@ -33,7 +33,7 @@ class Medialibrary
      */
     public function addMedia(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file): Media
     {
-        $library = Medialibrary::open();
+        $library = MediaLibrary::open();
 
         return $library->addMedia($file)
             // ->preservingOriginal()
@@ -47,6 +47,6 @@ class Medialibrary
      */
     public function clear()
     {
-        $this->init()->clearCollection();
+        $this->init()->clearMediaCollection(Config::get('mlibrary.collection_name', 'library'));
     }
 }

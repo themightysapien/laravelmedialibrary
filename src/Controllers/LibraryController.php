@@ -1,13 +1,13 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Controllers;
+namespace Themightysapien\MediaLibrary\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Pagination\Paginator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Themightysapien\Medialibrary\Resources\MediaResource;
-use Themightysapien\Medialibrary\Payloads\LibraryMediaPayload;
-use Themightysapien\Medialibrary\Process\ListLibraryMediaProcess;
+use Themightysapien\MediaLibrary\Resources\MediaResource;
+use Themightysapien\MediaLibrary\Payloads\LibraryMediaPayload;
+use Themightysapien\MediaLibrary\Process\ListLibraryMediaProcess;
 
 class LibraryController
 {
