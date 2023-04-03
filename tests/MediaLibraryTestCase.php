@@ -1,6 +1,6 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Tests;
+namespace Themightysapien\MediaLibrary\Tests;
 
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
@@ -84,6 +84,6 @@ class MediaLibraryTestCase extends TestCase
     {
         parent::tearDown();
 
-        File::deleteDirectory($this->getTempDirectory());
+        // File::deleteDirectory($this->getTempDirectory());
     }
 }

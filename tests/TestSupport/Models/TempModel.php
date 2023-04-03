@@ -1,14 +1,14 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Tests\TestSupport\Models;
+namespace Themightysapien\MediaLibrary\Tests\TestSupport\Models;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
-use Themightysapien\Medialibrary\Traits\UseMediaLibraryTable;
-use Themightysapien\Medialibrary\Traits\InteractsWithMediaLibrary;
+use Themightysapien\MediaLibrary\Traits\UseMediaLibraryTable;
+use Themightysapien\MediaLibrary\Traits\InteractsWithMediaLibrary;
 
 class TempModel extends Model implements HasMedia
 {

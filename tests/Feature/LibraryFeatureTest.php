@@ -1,6 +1,6 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Tests\Feature;
+namespace Themightysapien\MediaLibrary\Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -8,13 +8,14 @@ namespace Themightysapien\Medialibrary\Tests\Feature;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Themightysapien\Medialibrary\Models\Library;
-use Themightysapien\Medialibrary\Facades\Medialibrary;
+use Themightysapien\MediaLibrary\Models\Library;
+use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Themightysapien\Medialibrary\Tests\MediaLibraryTestCase;
-use Themightysapien\Medialibrary\Tests\TestSupport\Models\TempModel;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Themightysapien\MediaLibrary\Tests\MediaLibraryTestCase;
+use Themightysapien\MediaLibrary\Tests\TestSupport\Models\TempModel;
 
-class LibraryTest extends MediaLibraryTestCase
+class LibraryFeatureTest extends MediaLibraryTestCase
 {
 
     use LazilyRefreshDatabase;
@@ -27,6 +28,7 @@ class LibraryTest extends MediaLibraryTestCase
 
     public function setUpUploads($files)
     {
+        MediaLibrary::open();
         $tempModel = TempModel::firstOrCreate(['name' => 'Temp']);
 
         foreach ($files as $file => $content) {
@@ -37,8 +39,6 @@ class LibraryTest extends MediaLibraryTestCase
                 ->addMediaThroughLibrary(Storage::disk(Config::get('media-library.disk_name'))->path($file))
                 ->toMediaCollection();
         }
-
-        // dump($tempModel);
     }
 
     public function test_file_upload_with_library()
@@ -47,36 +47,51 @@ class LibraryTest extends MediaLibraryTestCase
 
         $this->setUpUploads($this->files);
 
-        $this->assertTrue(Medialibrary::open()->media->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
 
-        /* Check the library file exists */
+        /* Check the library record exists */
         $this->assertDatabaseHas('media', [
-            'collection_name' => Config::get('mlibrary.collection_name'),
+            'collection_name' => Config::get('mlibrary.collection_name', 'library'),
             'model_type' => Library::class,
             'file_name' => 'test.txt'
         ]);
 
-        /* Check model file exists */
+        /* Check model record exists */
         $this->assertDatabaseHas('media', [
             'collection_name' => 'default',
             'model_type' => TempModel::class,
             'file_name' => 'file.json'
         ]);
+    }
 
-        // $library = Medialibrary::init();
+    public function test_library_files_can_be_reused()
+    {
+        $this->setUpUploads($this->files);
 
-        // $tempModel->addMediaFromLibrary($library->media()->latest()->first())->toMediaCollection();
+        /* check initally library has correct number of files */
+        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
 
-        // $this->assertDatabaseCount('media', 3);
+        $tempModel = TempModel::firstOrCreate(['name' => 'Temp 2']);
 
-        // $this->
+        /* attach same file 4 times from library to model */
+        for ($i = 1; $i <= 4; $i++) {
+            $tempModel->addMediaFromLibrary(MediaLibrary::open()->media[0])->toMediaCollection();
+        }
+        /* check library file still exists */
+        $this->assertTrue(file_exists(MediaLibrary::open()->media[0]->getPath()));
+
+        /* check again library has correct number of files */
+        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
+
+        /* check temp model media count is correct */
+        $this->assertTrue($tempModel->media()->count() == 4, 'Temp model file count didnot match the upload');
     }
 
 
     public function test_route_works()
     {
         $response = $this->get(route('themightysapien.medialibrary.index'));
-        // dump($response);
+
 
         $response->assertStatus(Response::HTTP_OK);
     }
@@ -127,6 +142,7 @@ class LibraryTest extends MediaLibraryTestCase
             );
 
         $this->assertTrue(count($response['items']) == 1);
+        $this->assertTrue(strpos($response['items'][0]['name'], 'test') !== false);
     }
 
 
@@ -155,5 +171,41 @@ class LibraryTest extends MediaLibraryTestCase
             );
 
         $this->assertTrue(count($response['items']) == 1);
+        // dump(strpos($response['items'][0]['mime_type'], 'json'));
+
+        $this->assertTrue(strpos($response['items'][0]['mime_type'], 'json') !== false);
+    }
+
+
+    public function test_route_returns_default_sorted_records()
+    {
+        $this->setUpUploads($this->files);
+
+        $media = MediaLibrary::open()->media;
+        // dump($media);
+
+        $response = $this->json('get', route('themightysapien.medialibrary.index'), [
+            'sort_by' => 'id',
+            'sort_type' => 'DESC'
+        ]);
+
+
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(
+                [
+                    'items' => [
+                        '*' => [
+                            'id',
+                            'name',
+
+                        ]
+                    ]
+                ]
+            );
+
+        /* check last item is the first item in response */
+        $this->assertTrue($media[1]->id == $response['items'][0]['id']);
     }
 }

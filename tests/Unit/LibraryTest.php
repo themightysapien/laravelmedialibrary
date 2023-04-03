@@ -1,17 +1,21 @@
 <?php
 
-namespace Themightysapien\Medialibrary\Tests\Unit;
+namespace Themightysapien\MediaLibrary\Tests\Unit;
 
 
+use Mockery;
 use Tests\TestCase;
-use Themightysapien\Medialibrary\Tests\MediaLibraryTestCase;
+use Mockery\MockInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Themightysapien\Medialibrary\Models\Library;
-use Themightysapien\Medialibrary\Models\TempLibrary;
+use Themightysapien\MediaLibrary\MediaLibrary;
+use Themightysapien\MediaLibrary\Models\Library;
+use Themightysapien\MediaLibrary\Models\TempLibrary;
+use Themightysapien\MediaLibrary\Tests\MediaLibraryTestCase;
+use Themightysapien\MediaLibrary\Facades\MediaLibrary as FacadesMediaLibrary;
 
 class LibraryTest extends MediaLibraryTestCase
 {
@@ -20,10 +24,10 @@ class LibraryTest extends MediaLibraryTestCase
      */
     public function test_that_library_model_exists(): void
     {
-        $path = \Themightysapien\Medialibrary\Models\Library::class;
+        $path = \Themightysapien\MediaLibrary\Models\Library::class;
         // dd($path);
 
-        $this->assertTrue($path == 'Themightysapien\Medialibrary\Models\Library', 'Library File not loaded');
+        $this->assertTrue($path == 'Themightysapien\MediaLibrary\Models\Library', 'Library File not loaded');
     }
 
 
@@ -55,5 +59,17 @@ class LibraryTest extends MediaLibraryTestCase
         $this->assertNotNull(Config::get('mlibrary.filters'), 'Forgot to add filters to config');
 
         $this->assertTrue(is_array(Config::get('mlibrary.filters')) && count(Config::get('mlibrary.filters')) > 0, 'Filter has no items.');
+    }
+
+
+    public function test_facade_is_working(){
+        $this->instance(
+            'themightysapienmedialibrary',
+            Mockery::mock(MediaLibrary::class, function (MockInterface $mock) {
+                $mock->shouldReceive('init')->once()->andReturn('test');
+            })
+        );
+
+        $this->assertEquals('test', FacadesMediaLibrary::init());
     }
 }
