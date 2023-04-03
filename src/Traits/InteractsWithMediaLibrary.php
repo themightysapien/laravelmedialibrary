@@ -6,16 +6,20 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Themightysapien\Medialibrary\Models\Library;
+use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Themightysapien\Medialibrary\Facades\Medialibrary;
 
 trait InteractsWithMediaLibrary
 {
 
-    /*
-    @params $media Media|int
-    */
-    public function addMediaFromLibrary($media)
+
+    /**
+     * @param Media $media
+     *
+     * @return FileAdder
+     */
+    public function addMediaFromLibrary(Media $media): FileAdder
     {
         if (!$media instanceof Media) {
             $media = Media::findOrFail($media);
@@ -27,11 +31,16 @@ trait InteractsWithMediaLibrary
     }
 
 
-    public function addMediaThroughLibrary($path)
+    /**
+     * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $file
+     *
+     * @return FileAdder
+     */
+    public function addMediaThroughLibrary(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file): FileAdder
     {
 
 
-        $media = $this->addMediaToLibrary($path);
+        $media = Medialibrary::addMedia($file);
         // dump($media);
 
         // $media = $library->media()->latest()->first();
@@ -42,12 +51,5 @@ trait InteractsWithMediaLibrary
     }
 
 
-    public function addMediaToLibrary($path)
-    {
-        $library = Medialibrary::open();
 
-        return $library->addMedia($path)
-            // ->preservingOriginal()
-            ->toMediaCollection(Config::get('mlibrary.collection_name', 'library'));
-    }
 }
