@@ -16,14 +16,12 @@ class ListLibraryMediaProcess implements ProcessContract
         return app(Pipeline::class)
             ->send($payload)
             ->through($this->tasks())
-            // ->thenReturn();
             ->then(function (PayloadContract $payload) {
                 // dump($payload->queryBuilder()->toSql());
                 return $payload
                     ->queryBuilder()
                     ->paginate($payload->request()->get('per_page', Config::get('mlibrary.items_per_page', 50)));
             });
-            /* ->thenReturn() */;
     }
 
 

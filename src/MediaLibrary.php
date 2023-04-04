@@ -29,7 +29,7 @@ class MediaLibrary
 
     /**
      * Add media to library
-     * @param mixed $path
+     * @param mixed $file
      *
      * @return Media
      */

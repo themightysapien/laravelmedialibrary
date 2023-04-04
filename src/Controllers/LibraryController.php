@@ -20,9 +20,6 @@ class LibraryController
             request: $request
         ));
 
-        // dump(get_class($items));
-
-
         return response()->json([
             'items' => MediaResource::collection($items),
             'pagination' => $this->extractPagination($items)

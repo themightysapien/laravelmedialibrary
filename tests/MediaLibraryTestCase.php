@@ -84,6 +84,6 @@ class MediaLibraryTestCase extends TestCase
     {
         parent::tearDown();
 
-        // File::deleteDirectory($this->getTempDirectory());
+        File::deleteDirectory($this->getTempDirectory());
     }
 }

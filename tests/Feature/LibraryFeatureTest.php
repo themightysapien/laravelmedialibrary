@@ -54,7 +54,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
 
         $this->setUpUploads($this->files);
 
-        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
 
         /* Check the library record exists */
         $this->assertDatabaseHas('media', [
@@ -76,19 +76,19 @@ class LibraryFeatureTest extends MediaLibraryTestCase
         $this->setUpUploads($this->files);
 
         /* check initally library has correct number of files */
-        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
 
         $tempModel = TempModel::firstOrCreate(['name' => 'Temp 2']);
 
         /* attach same file 4 times from library to model */
         for ($i = 1; $i <= 4; $i++) {
-            $tempModel->addMediaFromLibrary(MediaLibrary::open()->media[0])->toMediaCollection();
+            $tempModel->addMediaFromLibrary(MediaLibrary::allMedia()[0])->toMediaCollection();
         }
         /* check library file still exists */
-        $this->assertTrue(file_exists(MediaLibrary::open()->media[0]->getPath()));
+        $this->assertTrue(file_exists(MediaLibrary::allMedia()[0]->getPath()));
 
         /* check again library has correct number of files */
-        $this->assertTrue(MediaLibrary::open()->media->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
 
         /* check temp model media count is correct */
         $this->assertTrue($tempModel->media()->count() == 4, 'Temp model file count didnot match the upload');
@@ -99,7 +99,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
 
-        $this->assertEquals(MediaLibrary::open()->media->pluck('id')->toArray(), MediaLibrary::allMedia()->pluck('id')->toArray());
+        $this->assertEquals(MediaLibrary::allMedia()->pluck('id')->toArray(), MediaLibrary::allMedia()->pluck('id')->toArray());
 
         $this->assertTrue(MediaLibrary::query() instanceof Builder);
     }

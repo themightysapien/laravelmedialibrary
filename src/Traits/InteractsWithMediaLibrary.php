@@ -3,9 +3,6 @@
 namespace Themightysapien\MediaLibrary\Traits;
 
 use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
-use Themightysapien\MediaLibrary\Models\Library;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
@@ -41,11 +38,6 @@ trait InteractsWithMediaLibrary
 
 
         $media = MediaLibrary::addMedia($file);
-        // dump($media);
-
-        // $media = $library->media()->latest()->first();
-        // dump($media->getPath());
-        // dump(Storage::disk(Config::get('media-library.disk_name'))->path($media->getPathRelativeToRoot()));
 
         return $this->addMediaFromLibrary($media);
     }
