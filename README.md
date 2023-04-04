@@ -57,7 +57,7 @@ $model->addMediaThroughLibrary($file)
 ```
 #### Associate library media for model.
 ```php
-$model->addMediaFromLibrary($media)
+$model->addMediaFromLibrary($media);
 // chain through any spatie's File Adder functions
 ->toMediaCollection();
 ```
@@ -65,17 +65,17 @@ $model->addMediaFromLibrary($media)
 ```php
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
-MediaLibrary::open()->clear();
+MediaLibrary::clear();
 ```
 #### Get library media collection
 ```php
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
 // All Media
-MediaLibrary::open()->getMedia()
+MediaLibrary::allMedia();
 
 // Builder
-MediaLibrary::open()->media()->limit(5)->lastest()->get()
+MediaLibrary::query()->limit(5)->lastest()->get();
 ```
 #### Get library media collection through api
 ```php

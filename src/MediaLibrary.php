@@ -2,6 +2,8 @@
 
 namespace Themightysapien\MediaLibrary;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Config;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Themightysapien\MediaLibrary\Models\Library;
@@ -48,5 +50,23 @@ class MediaLibrary
     public function clear()
     {
         $this->init()->clearMediaCollection(Config::get('mlibrary.collection_name', 'library'));
+    }
+
+
+    /**
+     * @return Collection
+     */
+    public function allMedia(): Collection
+    {
+        return $this->init()->getMedia(Config::get('mlibrary.collection_name', 'library'));
+    }
+
+
+    /**
+     * @return Builder
+     */
+    public function query(): Builder
+    {
+        return $this->init()->media();
     }
 }

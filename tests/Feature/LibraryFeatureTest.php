@@ -4,7 +4,7 @@ namespace Themightysapien\MediaLibrary\Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
 
-
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -23,11 +23,15 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     private $files = [
         'test.txt' => 'Hello world',
         'file.json' => '[{"hello":"world"}]'
-
     ];
 
     public function setUpUploads($files)
     {
+        // if (!isset($files['image.png'])) {
+        //     $files['image.png'] = file_get_contents('https://dummyimage.com/600x400/000/fff');
+        //     $this->files = $files;
+        // }
+        // dump($this->files);
         MediaLibrary::open();
         $tempModel = TempModel::firstOrCreate(['name' => 'Temp']);
 
@@ -35,14 +39,17 @@ class LibraryFeatureTest extends MediaLibraryTestCase
             Storage::disk(Config::get('media-library.disk_name'))->put($file, $content);
 
 
-            $tempModel
+           $media = $tempModel
                 ->addMediaThroughLibrary(Storage::disk(Config::get('media-library.disk_name'))->path($file))
                 ->toMediaCollection();
         }
+        // dump($media);
     }
 
     public function test_file_upload_with_library()
     {
+
+        // dump();
 
 
         $this->setUpUploads($this->files);
@@ -88,6 +95,16 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     }
 
 
+    public function test_all_media_facade_method()
+    {
+        $this->setUpUploads($this->files);
+
+        $this->assertEquals(MediaLibrary::open()->media->pluck('id')->toArray(), MediaLibrary::allMedia()->pluck('id')->toArray());
+
+        $this->assertTrue(MediaLibrary::query() instanceof Builder);
+    }
+
+
     public function test_route_works()
     {
         $response = $this->get(route('themightysapien.medialibrary.index'));
@@ -125,7 +142,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
             'name' => 'test'
         ]);
 
-        // dump($response);
+        // dump($response['items']);
 
         $response
             ->assertStatus(Response::HTTP_OK)
@@ -142,7 +159,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
             );
 
         $this->assertTrue(count($response['items']) == 1);
-        $this->assertTrue(strpos($response['items'][0]['name'], 'test') !== false);
+        $this->assertTrue(strpos($response['items'][0]['file_name'], 'test') !== false);
     }
 
 
@@ -181,7 +198,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
 
-        $media = MediaLibrary::open()->media;
+        $media = MediaLibrary::allMedia();
         // dump($media);
 
         $response = $this->json('get', route('themightysapien.medialibrary.index'), [
@@ -206,6 +223,6 @@ class LibraryFeatureTest extends MediaLibraryTestCase
             );
 
         /* check last item is the first item in response */
-        $this->assertTrue($media[1]->id == $response['items'][0]['id']);
+        $this->assertTrue($media[count($media) - 1]->id == $response['items'][0]['id']);
     }
 }
