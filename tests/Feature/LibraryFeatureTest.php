@@ -118,7 +118,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
         $response = $this->json('get', route('themightysapien.medialibrary.index'));
-        dump($response['items']);
+        // dump($response['items']);
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(
@@ -191,6 +191,39 @@ class LibraryFeatureTest extends MediaLibraryTestCase
         // dump(strpos($response['items'][0]['mime_type'], 'json'));
 
         $this->assertTrue(strpos($response['items'][0]['mime_type'], 'json') !== false);
+
+
+    }
+
+    public function test_route_returns_thumb_url_for_image()
+    {
+        $this->setUpUploads($this->files);
+
+        $response = $this->json('get', route('themightysapien.medialibrary.index'), [
+            'type' => 'image'
+        ]);
+
+        // dump($response);
+
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonStructure(
+                [
+                    'items' => [
+                        '*' => [
+                            'id',
+                            'name',
+                            'thumb_url'
+                        ]
+                    ]
+                ]
+            );
+
+
+
+        $this->assertTrue(strpos($response['items'][0]['mime_type'], 'image') !== false);
+
+
     }
 
 
