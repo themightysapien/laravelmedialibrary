@@ -1,4 +1,5 @@
 <?php
+
 namespace Themightysapien\MediaLibrary\Resources;
 
 use Illuminate\Http\Request;
@@ -31,7 +32,19 @@ class MediaResource extends JsonResource
             "responsive_images" => $this->responsive_images,
             "order_column" => $this->order_column,
             "created_at" => $this->created_at,
-            "updated_at" => $this->updated_at
+            "updated_at" => $this->updated_at,
+            'url' => $this->getFullUrl(),
+            'path' => $this->getPath(),
+            $this->mergeWhen($this->isImage(), function () {
+                return [
+                    'thumb_url' => $this->getFullUrl('thumb')
+                ];
+            })
         ];
+    }
+
+    public function isImage()
+    {
+        return strpos($this->mime_type, 'image') !== false;
     }
 }

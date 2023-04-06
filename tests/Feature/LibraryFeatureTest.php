@@ -27,10 +27,10 @@ class LibraryFeatureTest extends MediaLibraryTestCase
 
     public function setUpUploads($files)
     {
-        // if (!isset($files['image.png'])) {
-        //     $files['image.png'] = file_get_contents('https://dummyimage.com/600x400/000/fff');
-        //     $this->files = $files;
-        // }
+        if (!isset($files['image.png'])) {
+            $files['image.png'] = file_get_contents('https://dummyimage.com/600x400/000/fff');
+            $this->files = $files;
+        }
         // dump($this->files);
         MediaLibrary::open();
         $tempModel = TempModel::firstOrCreate(['name' => 'Temp']);
@@ -118,7 +118,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
         $response = $this->json('get', route('themightysapien.medialibrary.index'));
-        // dump($response['items']);
+        dump($response['items']);
         $response
             ->assertStatus(Response::HTTP_OK)
             ->assertJsonStructure(

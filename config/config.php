@@ -15,5 +15,10 @@ return [
         \Themightysapien\MediaLibrary\Filters\DefaultSortFilter::class,
     ],
     /* api list pagination  */
-    'items_per_page' => 50
+    'items_per_page' => 50,
+    /* library conversion */
+    'thumbnail' => [
+        'width' => 159,
+        'height' => 159,
+    ]
 ];
