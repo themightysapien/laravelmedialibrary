@@ -20,5 +20,9 @@ return [
     'thumbnail' => [
         'width' => 159,
         'height' => 159,
+    ],
+    'validations' => [
+        'image' => 'image',
+        'file' => 'mimes:jpg,png,gif,jpeg,pdf,xml,csv,pdf,doc,docx'
     ]
 ];

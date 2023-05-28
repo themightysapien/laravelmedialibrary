@@ -15,7 +15,7 @@ class MediaLibrary
      */
     public function init()
     {
-        return Library::firstOrNew([]);
+        return Library::firstOrCreate([]);
     }
 
     /**
@@ -36,6 +36,7 @@ class MediaLibrary
     public function addMedia(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file): Media
     {
         $library = MediaLibrary::open();
+        // print_r($library);
 
         return $library->addMedia($file)
             // ->preservingOriginal()
