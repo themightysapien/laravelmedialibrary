@@ -73,7 +73,7 @@ class LibraryController
      */
     public function destroy($id)
     {
-        abort(404);
+
         $media = MediaLibrary::query()->where('id', $id)->first();
 
         if ($media) {
