@@ -8,6 +8,8 @@ return [
     'route_prefix' => '/api/v1/',
     /* api route middleware */
     'route_middleware' => ['api'],
+    /* resource path */
+    'route_resource' => '/tsmedialibrary',
     /* listing filters */
     'filters' => [
         \Themightysapien\MediaLibrary\Filters\FileNameFilter::class,
@@ -18,8 +20,8 @@ return [
     'items_per_page' => 50,
     /* library conversion */
     'thumbnail' => [
-        'width' => 159,
-        'height' => 159,
+        'width' => 250,
+        'height' => 250,
     ],
     'validations' => [
         'image' => 'image',

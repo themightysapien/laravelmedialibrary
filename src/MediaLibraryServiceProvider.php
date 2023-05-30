@@ -46,7 +46,9 @@ class MediaLibraryServiceProvider extends ServiceProvider
 
             // Registering package commands.
             // $this->commands([]);
+
         }
+        require_once  __DIR__.'/Helpers/utils.php';
     }
 
     /**

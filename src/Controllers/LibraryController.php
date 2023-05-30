@@ -16,6 +16,9 @@ class LibraryController
 {
     use ValidatesRequests;
 
+    /*
+    Return Paginated Media Collection
+    */
     public function index(Request $request, ListLibraryMediaProcess $process)
     {
 
@@ -25,12 +28,15 @@ class LibraryController
         ));
         // dump(request()->url());
 
-        return response()->json([
+        return apiSuccessResponse([
             'items' => MediaResource::collection($items),
-            'pagination' => $this->extractPagination($items)
+            'pagination' => extractPaginationArray($items)
         ]);
     }
 
+    /*
+    Add Media to Library
+    */
     public function store(Request $request)
     {
         /* select correct rules */
@@ -38,14 +44,17 @@ class LibraryController
         if ($request->allow_files) {
             $rules = Config::get('mlibrary.validations.file', 'jpg,png,gif,jpeg,pdf');
         }
-        // return ($rules);
+
         /* validate */
         $this->validate($request, [
             'files.*' => 'required|' . $rules
         ], [
-            'files.*.mimes' => $request->allow_files ? 'Cannot accept uploaded file type.' : 'Upload file must be an image'
+            'files.*.image' => 'Uploaded file must be an image',
+            'files.*.mimes' => 'Cannot accept uploaded file type.'
         ]);
 
+
+        /* add media and store in array */
         $attachments = [];
 
         foreach ($request->file('files') as $file) {
@@ -53,27 +62,24 @@ class LibraryController
         }
 
 
-        return response()->json([
+        return apiSuccessResponse([
             'items' => MediaResource::collection($attachments)
         ]);
     }
 
-    private function extractPagination(Paginator $paginator)
+
+    /*
+    Remove a media by id
+     */
+    public function destroy($id)
     {
-        return [
-            'total' => $paginator->total(),
-            'per_page' => min($paginator->total(), $paginator->perPage()),
-            'current_page' => $paginator->currentPage(),
-            'last_page' => $paginator->lastPage(),
-            'links' => [
-                'first_url' => $paginator->url(1),
-                'last_url' => $paginator->url($paginator->lastPage()),
-                'next_url' => $paginator->nextPageUrl(),
-                'previous_url' => $paginator->previousPageUrl(),
-                'path_url' => url('api/v1')
-            ],
-            'from' => $paginator->firstItem(),
-            'to' => $paginator->lastItem()
-        ];
+        abort(404);
+        $media = MediaLibrary::query()->where('id', $id)->first();
+
+        if ($media) {
+            $media->delete();
+        }
+
+        return apiSuccessResponse([], 'Deleted');
     }
 }
