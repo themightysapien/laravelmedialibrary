@@ -14,7 +14,9 @@ return new class extends Migration
     {
         Schema::create(Config::get('mlibrary.table_name'), function (Blueprint $table) {
             $table->id();
+            $table->string('name')->nullable()->default(Config::get('app.name'));
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
