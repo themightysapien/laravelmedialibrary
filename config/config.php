@@ -7,7 +7,7 @@ return [
     /* api route prefix */
     'route_prefix' => '/api/v1/',
     /* api route middleware */
-    'route_middleware' => ['api'],
+    'route_middleware' => ['api', 'auth'],
     /* resource path */
     'route_resource' => '/tsmedialibrary',
     /* listing filters */

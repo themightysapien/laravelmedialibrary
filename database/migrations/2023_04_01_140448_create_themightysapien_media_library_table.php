@@ -15,8 +15,12 @@ return new class extends Migration
         Schema::create(Config::get('mlibrary.table_name'), function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable()->default(Config::get('app.name'));
+            $table->unsignedBigInteger('user_id')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

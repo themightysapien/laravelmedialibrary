@@ -2,6 +2,7 @@
 
 namespace Themightysapien\MediaLibrary\Models;
 
+use App\Models\User;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +13,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Library extends Model implements HasMedia
 {
     use SoftDeletes, InteractsWithMedia;
+
+    protected $fillable = ['user_id'];
 
     public function __construct($attributes = [])
     {
@@ -24,5 +27,9 @@ class Library extends Model implements HasMedia
         $this->addMediaConversion('thumb')
             ->width(Config::get('mlibrary.thumbnail.width'))
             ->height(Config::get('mlibrary.thumbnail.height'));
+    }
+
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

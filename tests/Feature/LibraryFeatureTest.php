@@ -20,6 +20,21 @@ class LibraryFeatureTest extends MediaLibraryTestCase
 
     use LazilyRefreshDatabase;
 
+    private $user;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = \App\Models\User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+        // dd($this->user);
+
+        // auth()->login($this->user);
+    }
+
     private $files = [
         'test.txt' => 'Hello world',
         'file.json' => '[{"hello":"world"}]'
@@ -32,15 +47,16 @@ class LibraryFeatureTest extends MediaLibraryTestCase
             $this->files = $files;
         }
         // dump($this->files);
-        MediaLibrary::open();
-        $tempModel = TempModel::firstOrCreate(['name' => 'Temp']);
+        MediaLibrary::open($this->user->id);
+        $tempModel = TempModel::firstOrCreate(['name' => 'Temp', 'user_id' => $this->user->id]);
 
         foreach ($files as $file => $content) {
             Storage::disk(Config::get('media-library.disk_name'))->put($file, $content);
 
 
-           $media = $tempModel
-                ->addMediaThroughLibrary(Storage::disk(Config::get('media-library.disk_name'))->path($file))
+
+            $media = $tempModel
+                ->addMediaThroughLibrary(Storage::disk(Config::get('media-library.disk_name'))->path($file), $this->user->id)
                 ->toMediaCollection();
         }
         // dump($media);
@@ -54,7 +70,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
 
         $this->setUpUploads($this->files);
 
-        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia($this->user->id)->count() == count($this->files));
 
         /* Check the library record exists */
         $this->assertDatabaseHas('media', [
@@ -76,19 +92,19 @@ class LibraryFeatureTest extends MediaLibraryTestCase
         $this->setUpUploads($this->files);
 
         /* check initally library has correct number of files */
-        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia($this->user->id)->count() == count($this->files));
 
-        $tempModel = TempModel::firstOrCreate(['name' => 'Temp 2']);
+        $tempModel = TempModel::firstOrCreate(['name' => 'Temp 2', 'user_id' => $this->user->id]);
 
         /* attach same file 4 times from library to model */
         for ($i = 1; $i <= 4; $i++) {
-            $tempModel->addMediaFromLibrary(MediaLibrary::allMedia()[0])->toMediaCollection();
+            $tempModel->addMediaFromLibrary(MediaLibrary::allMedia($this->user->id)[0])->toMediaCollection();
         }
         /* check library file still exists */
-        $this->assertTrue(file_exists(MediaLibrary::allMedia()[0]->getPath()));
+        $this->assertTrue(file_exists(MediaLibrary::allMedia($this->user->id)[0]->getPath()));
 
         /* check again library has correct number of files */
-        $this->assertTrue(MediaLibrary::allMedia()->count() == count($this->files));
+        $this->assertTrue(MediaLibrary::allMedia($this->user->id)->count() == count($this->files));
 
         /* check temp model media count is correct */
         $this->assertTrue($tempModel->media()->count() == 4, 'Temp model file count didnot match the upload');
@@ -99,14 +115,16 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
 
-        $this->assertEquals(MediaLibrary::allMedia()->pluck('id')->toArray(), MediaLibrary::allMedia()->pluck('id')->toArray());
+        $this->assertEquals(MediaLibrary::allMedia($this->user->id)->pluck('id')->toArray(), MediaLibrary::allMedia($this->user->id)->pluck('id')->toArray());
 
-        $this->assertTrue(MediaLibrary::query() instanceof Builder);
+        $this->assertTrue(MediaLibrary::query($this->user->id) instanceof Builder);
     }
 
 
     public function test_route_works()
     {
+        auth()->login($this->user);
+
         $response = $this->get(route('themightysapien.medialibrary.index'));
 
 
@@ -117,6 +135,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     public function test_route_returns_media_items()
     {
         $this->setUpUploads($this->files);
+        auth()->login($this->user);
         $response = $this->json('get', route('themightysapien.medialibrary.index'));
         // dump($response['items']);
         $response
@@ -137,6 +156,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     public function test_route_returns_filtered_media_items_by_name()
     {
         $this->setUpUploads($this->files);
+        auth()->login($this->user);
 
         $response = $this->json('get', route('themightysapien.medialibrary.index'), [
             'name' => 'test'
@@ -166,6 +186,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     public function test_route_returns_filtered_media_items_by_type()
     {
         $this->setUpUploads($this->files);
+        auth()->login($this->user);
 
         $response = $this->json('get', route('themightysapien.medialibrary.index'), [
             'type' => 'json'
@@ -191,13 +212,12 @@ class LibraryFeatureTest extends MediaLibraryTestCase
         // dump(strpos($response['items'][0]['mime_type'], 'json'));
 
         $this->assertTrue(strpos($response['items'][0]['mime_type'], 'json') !== false);
-
-
     }
 
     public function test_route_returns_thumb_url_for_image()
     {
         $this->setUpUploads($this->files);
+        auth()->login($this->user);
 
         $response = $this->json('get', route('themightysapien.medialibrary.index'), [
             'type' => 'image'
@@ -222,8 +242,6 @@ class LibraryFeatureTest extends MediaLibraryTestCase
 
 
         $this->assertTrue(strpos($response['items'][0]['mime_type'], 'image') !== false);
-
-
     }
 
 
@@ -231,8 +249,9 @@ class LibraryFeatureTest extends MediaLibraryTestCase
     {
         $this->setUpUploads($this->files);
 
-        $media = MediaLibrary::allMedia();
+        $media = MediaLibrary::allMedia($this->user->id);
         // dump($media);
+        auth()->login($this->user);
 
         $response = $this->json('get', route('themightysapien.medialibrary.index'), [
             'sort_by' => 'id',

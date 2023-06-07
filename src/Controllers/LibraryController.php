@@ -23,7 +23,7 @@ class LibraryController
     {
 
         $items = $process->run(new LibraryMediaPayload(
-            builder: Media::query(),
+            builder: MediaLibrary::query($request->user()->id),
             request: $request
         ));
         // dump(request()->url());
@@ -58,7 +58,7 @@ class LibraryController
         $attachments = [];
 
         foreach ($request->file('files') as $file) {
-            $attachments[] = MediaLibrary::addMedia($file);
+            $attachments[] = MediaLibrary::addMedia($file, $request->user()->id);
         }
 
 
@@ -74,7 +74,7 @@ class LibraryController
     public function destroy($id)
     {
 
-        $media = MediaLibrary::query()->where('id', $id)->first();
+        $media = MediaLibrary::query($request->user()->id)->where('id', $id)->first();
 
         if ($media) {
             $media->delete();

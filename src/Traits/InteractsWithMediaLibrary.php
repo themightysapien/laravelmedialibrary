@@ -33,11 +33,11 @@ trait InteractsWithMediaLibrary
      *
      * @return FileAdder
      */
-    public function addMediaThroughLibrary(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file): FileAdder
+    public function addMediaThroughLibrary(string|\Symfony\Component\HttpFoundation\File\UploadedFile $file, $user_id = null): FileAdder
     {
 
 
-        $media = MediaLibrary::addMedia($file);
+        $media = MediaLibrary::addMedia($file, $user_id);
 
         return $this->addMediaFromLibrary($media);
     }

@@ -15,7 +15,7 @@ class TempModel extends Model implements HasMedia
 {
     use SoftDeletes, InteractsWithMedia, InteractsWithMediaLibrary;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'user_id'];
 
     public function __construct($attributes = [])
     {
