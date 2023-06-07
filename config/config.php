@@ -5,9 +5,9 @@ return [
     /* library media collection name */
     'collection_name' => 'library',
     /* api route prefix */
-    'route_prefix' => '/api/v1/',
+    'route_prefix' => '/v1/',
     /* api route middleware */
-    'route_middleware' => ['api', 'auth'],
+    'route_middleware' => ['web', 'auth'],
     /* resource path */
     'route_resource' => '/tsmedialibrary',
     /* listing filters */
