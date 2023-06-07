@@ -126,6 +126,7 @@ class LibraryFeatureTest extends MediaLibraryTestCase
         auth()->login($this->user);
 
         $response = $this->get(route('themightysapien.medialibrary.index'));
+        // dd($response);
 
 
         $response->assertStatus(Response::HTTP_OK);

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Contracts\Pagination\Paginator;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Validation\UnauthorizedException;
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 use Themightysapien\MediaLibrary\Resources\MediaResource;
 use Themightysapien\MediaLibrary\Payloads\LibraryMediaPayload;
@@ -21,6 +22,9 @@ class LibraryController
     */
     public function index(Request $request, ListLibraryMediaProcess $process)
     {
+        if(!$request->user()){
+            abort(403, 'Authenticated User Missing');
+        }
 
         $items = $process->run(new LibraryMediaPayload(
             builder: MediaLibrary::query($request->user()->id),
@@ -71,7 +75,7 @@ class LibraryController
     /*
     Remove a media by id
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
 
         $media = MediaLibrary::query($request->user()->id)->where('id', $id)->first();

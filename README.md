@@ -46,12 +46,12 @@ class YourModel extends Model implements HasMedia
 ```php
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
-$media = MediaLibrary::open()->addMedia($file);
+$media = MediaLibrary::open($user_id)->addMedia($file);
 ```
 #### Associate file for model through library.
 This will first add the file to library and then associate media to the model.
 ```php
-$model->addMediaThroughLibrary($file)
+$model->addMediaThroughLibrary($file, $user_id)
 // chain through any spatie's File Adder functions
 ->toMediaCollection();
 ```
@@ -65,17 +65,17 @@ $model->addMediaFromLibrary($media);
 ```php
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
-MediaLibrary::clear();
+MediaLibrary::clear($user_id);
 ```
 #### Get library media collection
 ```php
 use Themightysapien\MediaLibrary\Facades\MediaLibrary;
 
 // All Media
-MediaLibrary::allMedia();
+MediaLibrary::allMedia($user_id);
 
 // Builder
-MediaLibrary::query()->limit(5)->lastest()->get();
+MediaLibrary::query($user_id)->limit(5)->lastest()->get();
 ```
 #### Get library media collection through api
 ```php
